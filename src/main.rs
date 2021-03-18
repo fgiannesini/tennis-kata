@@ -10,6 +10,10 @@ struct Scoreboard {
 impl Scoreboard {
     fn score(&self) -> String {
         let mut score = "".to_string();
+        if self.player1 == 3 && self.player2 == 3 {
+            score.push_str("Deuce");
+            return score;
+        }
         score.push_str(self.convert_score_to_label(self.player1));
         score.push_str(" ");
         score.push_str(self.convert_score_to_label(self.player2));
@@ -74,5 +78,15 @@ mod tests {
         let mut scoreboard: Scoreboard = Default::default();
         scoreboard.trigger_player2();
         assert_eq!(scoreboard.score(), "Love Fifteen")
+    }
+
+    #[test]
+    fn should_display_deuce_if_players_win_three_times() {
+        let mut scoreboard: Scoreboard = Default::default();
+        for _i in 0..3 {
+            scoreboard.trigger_player1();
+            scoreboard.trigger_player2();
+        }
+        assert_eq!(scoreboard.score(), "Deuce")
     }
 }
