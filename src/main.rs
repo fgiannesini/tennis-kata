@@ -10,8 +10,14 @@ struct Scoreboard {
 impl Scoreboard {
     fn score(&self) -> String {
         let mut score = "".to_string();
-        if self.player1 >= 3 && self.player2 == self.player1 {
-            score.push_str("Deuce");
+        if self.player1 >= 3 && self.player2 >= 3 {
+            if self.player1 == self.player2 {
+                score.push_str("Deuce");
+            } else if self.player1 > self.player2 {
+                score.push_str("Advantage Player1");
+            } else {
+                score.push_str("Advantage Player2");
+            }
             return score;
         }
         score.push_str(self.convert_score_to_label(self.player1));
@@ -98,5 +104,27 @@ mod tests {
             scoreboard.trigger_player2();
         }
         assert_eq!(scoreboard.score(), "Deuce")
+    }
+
+    #[test]
+    fn should_display_advantage_player_1_if_players_have_more_than_three_points_and_player_1_trigger() {
+        let mut scoreboard: Scoreboard = Default::default();
+        for _i in 0..4 {
+            scoreboard.trigger_player1();
+            scoreboard.trigger_player2();
+        }
+        scoreboard.trigger_player1();
+        assert_eq!(scoreboard.score(), "Advantage Player1")
+    }
+
+    #[test]
+    fn should_display_advantage_player_2_if_players_have_more_than_three_points_and_player_2_trigger() {
+        let mut scoreboard: Scoreboard = Default::default();
+        for _i in 0..4 {
+            scoreboard.trigger_player1();
+            scoreboard.trigger_player2();
+        }
+        scoreboard.trigger_player2();
+        assert_eq!(scoreboard.score(), "Advantage Player2")
     }
 }
