@@ -10,7 +10,7 @@ struct Scoreboard {
 impl Scoreboard {
     fn score(&self) -> String {
         let mut score = "".to_string();
-        if self.player1 == 3 && self.player2 == 3 {
+        if self.player1 >= 3 && self.player2 == self.player1 {
             score.push_str("Deuce");
             return score;
         }
@@ -84,6 +84,16 @@ mod tests {
     fn should_display_deuce_if_players_win_three_times() {
         let mut scoreboard: Scoreboard = Default::default();
         for _i in 0..3 {
+            scoreboard.trigger_player1();
+            scoreboard.trigger_player2();
+        }
+        assert_eq!(scoreboard.score(), "Deuce")
+    }
+
+    #[test]
+    fn should_display_deuce_if_players_have_same_score_more_than_three() {
+        let mut scoreboard: Scoreboard = Default::default();
+        for _i in 0..4 {
             scoreboard.trigger_player1();
             scoreboard.trigger_player2();
         }
