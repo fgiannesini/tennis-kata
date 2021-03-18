@@ -10,22 +10,28 @@ struct Scoreboard {
 impl Scoreboard {
     fn score(&self) -> String {
         let mut score = "".to_string();
-        match self.player1 {
-            0 => score.push_str("Love"),
-            1 => score.push_str("Fifteen"),
-            2 => score.push_str("Thirty"),
-            3 => score.push_str("Forty"),
+        score.push_str(self.convert_score_to_label(self.player1));
+        score.push_str(" ");
+        score.push_str(self.convert_score_to_label(self.player2));
+        score
+    }
+
+    fn convert_score_to_label(&self, player: u8) -> &str {
+        match player {
+            0 => "Love",
+            1 => "Fifteen",
+            2 => "Thirty",
+            3 => "Forty",
             _ => panic!()
         }
-        score.push_str(" ");
-        if self.player2 == 0 {
-            score.push_str("Love")
-        }
-        score
     }
 
     fn trigger_player1(&mut self) {
         self.player1 = self.player1 + 1;
+    }
+
+    fn trigger_player2(&mut self) {
+        self.player2 = self.player2 + 1;
     }
 }
 
@@ -61,5 +67,12 @@ mod tests {
         scoreboard.trigger_player1();
         scoreboard.trigger_player1();
         assert_eq!(scoreboard.score(), "Forty Love")
+    }
+
+    #[test]
+    fn should_display_fifteen_if_player_two_win_one_time() {
+        let mut scoreboard: Scoreboard = Default::default();
+        scoreboard.trigger_player2();
+        assert_eq!(scoreboard.score(), "Love Fifteen")
     }
 }
